@@ -1,0 +1,151 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dpo: <http://purl.org/twc/dpo/ont/> .
+@prefix dpo-kb: <http://purl.org/twc/dpo/kb/> .
+@prefix fhir: <http://hl7.org/fhir/> . 
+@prefix sio: <http://semanticscience.org/resource/> . 
+@prefix    loinc: <http://purl.bioontology.org/ontology/LNC/> .
+@prefix    uo: <http://purl.obolibrary.org/obo/UO_> . 
+
+fhir:Patient rdf:type owl:Class ;
+    rdfs:label "patient" .
+
+sio:hasAttribute rdf:type owl:ObjectProperty ;
+    rdfs:label "has attribute" .
+
+dpo:SedentaryLifestyle rdf:type owl:Class ;
+    rdfs:label "Sedentary Lifestyle" ;
+    rdfs:subClassOf sio:Attribute .
+
+fhir:Patient owl:disjointWith sio:Attribute .
+
+dpo:NotComplyingWithTherapy rdf:type owl:Class ;
+    rdfs:label "Not Complying With Therapy" ;
+    owl:equivalentClass 
+        [ rdf:type owl:Class ;
+            owl:unionOf (
+              dpo:TherapyNotPrescribed
+              dpo:TherapyCausingAdverseEffect
+              dpo:TherapyTooExpensive
+              dpo:NotAdheringToTherapy
+            )
+        ] ;
+    rdfs:subClassOf dpo:SedentaryLifestyle .
+
+dpo:NotComplyingWithTherapyPatient rdf:type owl:Class  ;
+    owl:equivalentClass [
+    rdf:type owl:Class ;
+      owl:intersectionOf (
+       fhir:Patient 
+        [ rdf:type owl:Restriction ;
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:NotComplyingWithTherapy ] 
+     )
+    ] ;
+    rdfs:subClassOf dpo:Patient ;
+    rdfs:label "patient not complying with therapy" .
+
+
+dpo:TherapyNotPrescribed rdf:type owl:Class ;
+    rdfs:label "Therapy Not Prescribed" .
+
+dpo:TherapyNotPrescribedPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:TherapyNotPrescribed
+            ] 
+        )
+    ];
+    rdfs:label "patient not prescribed therapy" .
+
+
+dpo:TherapyCausingAdverseEffect rdf:type owl:Class ;
+    rdfs:label "Therapy Causing Adverse Effect" .
+
+dpo:TherapyCausingAdverseEffectPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:TherapyCausingAdverseEffect
+            ] 
+        )
+    ];
+    rdfs:label "patient with therapy causing adverse effect" .
+
+dpo:TherapyTooExpensive rdf:type owl:Class ;
+    rdfs:label "Therapy Too Expensive" .
+
+dpo:TherapyTooExpensivePatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:TherapyTooExpensive
+            ] 
+        )
+    ];
+    rdfs:label "patient whose therapy is too expensive" .
+
+dpo:TherapyNotInsured rdf:type owl:Class ;
+    rdfs:subClassOf dpo:TherapyTooExpensive ;
+    rdfs:label "Therapy Not Insured" .
+
+dpo:TherapyNotInsuredPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:TherapyNotInsured
+            ] 
+        )
+    ];
+    rdfs:subClassOf dpo:TherapyTooExpensivePatient ;
+    rdfs:label "patient with therapy not insured" .
+
+dpo:NotAdheringToTherapy rdf:type owl:Class ;
+    rdfs:label "Not Adhering To Therapy" .
+
+dpo:NotAdheringToTherapyPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:NotAdheringToTherapy
+            ] 
+        )
+    ];
+    rdfs:label "patient not adhering to therapy" .
+
+dpo:ForgotToTakeTherapy rdf:type owl:Class ;
+    rdfs:subClassOf dpo:NotAdheringToTherapy ;
+    rdfs:label "Forgot To Take Therapy" .
+
+dpo:ForgotToTakeTherapyPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:ForgotToTakeTherapy
+            ] 
+        )
+    ];
+    rdfs:subClassOf dpo:NotAdheringToTherapyPatient ;
+    rdfs:label "patient who forgot to take therapy" .
+

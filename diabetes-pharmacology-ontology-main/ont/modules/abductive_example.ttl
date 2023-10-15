@@ -1,0 +1,323 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dpo: <http://purl.org/twc/dpo/ont/> .
+@prefix dpo-kb: <http://purl.org/twc/dpo/kb/> .
+@prefix fhir: <http://hl7.org/fhir/> . 
+@prefix sio: <http://semanticscience.org/resource/> . 
+@prefix    loinc: <http://purl.bioontology.org/ontology/LNC/> .
+@prefix    uo: <http://purl.obolibrary.org/obo/UO_> . 
+
+fhir:Patient rdf:type owl:Class ;
+    rdfs:label "patient" .
+
+sio:hasAttribute rdf:type owl:ObjectProperty ;
+    rdfs:label "has attribute" .
+
+dpo:WeightGain rdf:type owl:Class ;
+    rdfs:label "Weight Gain" ;
+    rdfs:subClassOf sio:Attribute .
+
+dpo:ClinicallyRelevantWeightGain rdf:type owl:Class ;
+    rdfs:label "Clinically Relevant Weight Gain" ;
+    owl:equivalentClass 
+        [ rdf:type owl:Class ;
+            owl:unionOf (
+              dpo:ClinicallyRelevantBMIGain
+              dpo:DecreasedActivity
+              dpo:ChangeInDiet
+              dpo:MedicinalEffect
+              dpo:BiologicalEffect
+            )
+        ] ;
+    rdfs:subClassOf dpo:WeightGain .
+
+dpo:WeightGainPatient rdf:type owl:Class ;
+    owl:intersectionOf (   
+        fhir:Patient 
+        [ rdf:type owl:Restriction ; 
+          owl:onProperty sio:hasAttribute ;
+          owl:someValuesFrom dpo:WeightGain
+        ] 
+    );
+    rdfs:label "Weight Gain Patient" .
+
+fhir:Patient owl:disjointWith sio:Attribute .
+
+#dpo:ClinicallyRelevantWeightGainPatient
+#    rdfs:subClassOf fhir:Patient ,
+#        [ rdf:type owl:Restriction ;
+#            owl:onProperty sio:hasAttribute ;
+#            owl:someValuesFrom dpo:ClinicallyRelevantWeightGain ] ;
+#    rdfs:label "clinically relevant weight gain patient" .
+
+dpo:ClinicallyRelevantWeightGainPatient rdf:type owl:Class  ;
+    owl:equivalentClass [
+    rdf:type owl:Class ;
+      owl:intersectionOf (
+       fhir:Patient 
+        [ rdf:type owl:Restriction ;
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:ClinicallyRelevantWeightGain ] 
+     )
+    ] ;
+    rdfs:subClassOf dpo:WeightGainPatient ;
+    rdfs:label "clinically relevant weight gain patient" .
+
+dpo:BMIGain rdf:type owl:Class ;
+    rdfs:label "BMI Gain" .
+
+dpo:BMIGainPatient rdf:type owl:Class  ;
+  owl:equivalentClass [
+    rdf:type owl:Class ;
+    owl:intersectionOf (
+      fhir:Patient 
+      [ rdf:type owl:Restriction ;
+            owl:onProperty sio:hasAttribute ;
+            owl:someValuesFrom dpo:dpo:BMIGain ] 
+    )
+  ] ;
+  rdfs:label "BMI Gain Patient" .
+
+dpo:ClinicallyRelevantBMIGain rdf:type owl:Class ;
+    rdfs:subClassOf dpo:BMIGain ;
+    rdfs:label "Clinically Relevant BMI Gain" .
+
+dpo:ClinicallyRelevantBMIGainPatient rdf:type owl:Class  ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ;
+                owl:onProperty sio:hasAttribute ;
+                owl:someValuesFrom dpo:ClinicallyRelevantBMIGain ] 
+        )
+    ] ;
+    rdfs:label "Clinically Relevant BMI Gain Patient" ;
+    rdfs:subClassOf dpo:BMIGainPatient .
+
+dpo:DecreasedActivity rdf:type owl:Class ;
+    rdfs:label "Decreased Activity" .
+
+dpo:DecreasedActivityPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:DecreasedActivity
+            ] 
+        )
+    ];
+    rdfs:label "Decreased Activity Patient" .
+
+dpo:ReductionInSteps rdf:type owl:Class ;
+    rdfs:subClassOf dpo:DecreasedActivity ;
+    rdfs:label "Reduction In Steps" .
+
+dpo:StepsDecreasedPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:ReductionInSteps
+            ] 
+        )
+    ];
+    rdfs:subClassOf dpo:DecreasedActivityPatient ;
+    rdfs:label "Steps Decreased Patient" .
+
+
+dpo:Injury rdf:type owl:Class ;
+    rdfs:subClassOf dpo:DecreasedActivity ;
+    rdfs:label "Injury" .
+
+dpo:InjuredPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:Injury
+            ] 
+        )
+    ];
+    rdfs:label "Injured Patient" ;
+    rdfs:subClassOf dpo:DecreasedActivityPatient .
+
+dpo:ChangeInDiet rdf:type owl:Class ;
+    rdfs:label "Change In Diet" .
+
+dpo:ChangedDietPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:ChangeInDiet
+            ] 
+        )
+    ];
+    rdfs:label "Changed Diet Patient" .
+
+dpo:MedicinalEffect rdf:type owl:Class ;
+    rdfs:label "Medicinal Effect" ;
+    rdfs:subClassOf 
+        [ rdf:type owl:Class ;
+            owl:unionOf (
+                dpo:SingleDrugSideEffect
+                dpo:MultipleDrugContraindication
+            )
+        ] .
+
+dpo:MedicinallyEffectedPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:MedicinalEffect
+            ] 
+        )
+    ];
+    rdfs:label "Medicinally Effected Patient" .
+
+dpo:SingleDrugSideEffect rdf:type owl:Class ;
+    rdfs:subClassOf dpo:MedicinalEffect ;
+    rdfs:label "Single Drug Side Effect" .
+
+dpo:SingleDrugSideEffectedPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:SingleDrugSideEffect
+            ] 
+        )
+    ];
+    rdfs:label "Single Drug Side Effected Patient" .
+
+dpo:MultipleDrugContraindication rdf:type owl:Class ;
+    rdfs:subClassOf dpo:MedicinalEffect ;
+    rdfs:label "Multiple Drug Contraindication" .
+
+dpo:MultipleDrugContradictedPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:MultipleDrugContraindication
+            ] 
+        )
+    ];
+    rdfs:label "Multiple Drug Contradicted Patient" .
+
+dpo:BiologicalEffect rdf:type owl:Class ;
+    rdfs:label "Biological Effect" .
+
+dpo:BiologicallyEffectedPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:BiologicalEffect
+            ] 
+        )
+    ];
+    rdfs:label "Biologically Effected Patient" .
+
+dpo:MetabolismDecrease rdf:type owl:Class ;
+    rdfs:subClassOf dpo:BiologicalEffect ;
+    rdfs:label "Metabolism Decrease" .
+
+dpo:MetabolismDecreasedPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:MetabolismDecrease
+            ] 
+        )
+    ];
+    rdfs:label "Metabolism Decreased Patient" .
+
+dpo:Hypothyroidism rdf:type owl:Class ;
+    rdfs:subClassOf dpo:MetabolismDecrease ;
+    rdfs:label "Hypothyroidism" .
+
+dpo:HypothyroidismPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:Hypothyroidism
+            ] 
+        )
+    ];
+    rdfs:label "Hypothyroidism Patient" .
+
+dpo:BMIMeasurement rdf:type owl:Class ;
+    rdfs:subClassOf fhir:Observation ;
+    owl:equivalentClass
+        [ rdf:type owl:Restriction ;
+            owl:onProperty dpo:ObservationCode ;
+            owl:hasValue loinc:35925-4 ] ;
+    rdfs:label "BMI Measurement" .
+
+dpo:WeightMeasurement rdf:type owl:Class ;
+    rdfs:subClassOf fhir:Observation ;
+    owl:equivalentClass
+        [ rdf:type owl:Restriction ;
+            owl:onProperty dpo:ObservationCode ;
+            owl:hasValue loinc:29463-7  ] ;
+    rdfs:label "Weight Measurement" .
+
+dpo:StepMeasurement rdf:type owl:Class ;
+    rdfs:subClassOf fhir:Observation ;
+    owl:equivalentClass
+        [ rdf:type owl:Restriction ;
+            owl:onProperty dpo:ObservationCode ;
+            owl:hasValue loinc:55423-8  ] ;
+    rdfs:label "Step Measurement" .
+
+#dpo-kb:jill rdf:type  fhir:Patient .
+
+dpo-kb:decreasedActivity rdf:type dpo:DecreasedActivity .
+
+dpo-kb:reductionInSteps rdf:type dpo:ReductionInSteps .
+
+dpo-kb:changeInDiet rdf:type dpo:ChangeInDiet .
+
+dpo-kb:medicinalEffect rdf:type dpo:MedicinalEffect .
+
+dpo-kb:singleDrugSideEffect rdf:type dpo:SingleDrugSideEffect.
+
+dpo-kb:multipleDrugContraindication rdf:type dpo:MultipleDrugContraindication .
+
+dpo-kb:biologicalEffect rdf:type dpo:BiologicalEffect .
+
+dpo-kb:clinicalBMIGain rdf:type dpo:ClinicallyRelevantBMIGain .
+
+dpo-kb:clinicalWeightGain rdf:type dpo:ClinicallyRelevantWeightGain .
+
+dpo-kb:metabolismDecrease rdf:type dpo:MetabolismDecrease .
+
+dpo-kb:dpo:hypothyroidism rdf:type dpo:Hypothyroidism .
+

@@ -1,0 +1,123 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dpo: <http://purl.org/twc/dpo/ont/> .
+@prefix dpo-kb: <http://purl.org/twc/dpo/kb/> .
+@prefix fhir: <http://hl7.org/fhir/> . 
+@prefix sio: <http://semanticscience.org/resource/> . 
+@prefix    loinc: <http://purl.bioontology.org/ontology/LNC/> .
+@prefix    uo: <http://purl.obolibrary.org/obo/UO_> . 
+
+fhir:Patient rdf:type owl:Class ;
+    rdfs:label "patient" .
+
+sio:hasAttribute rdf:type owl:ObjectProperty ;
+    rdfs:label "has attribute" .
+
+dpo:Measurement rdf:type owl:Class ;
+    rdfs:label "Measurement" ;
+    rdfs:subClassOf sio:Attribute .
+
+dpo:DiabetesHbA1CLevel rdf:type owl:Class ;
+    rdfs:label "Diabetes HbA1C Level" ;
+    owl:equivalentClass 
+        [ rdf:type owl:Class ;
+            owl:unionOf (
+              dpo:MedicationNotEffective
+              dpo:NotComplyingWithTherapy
+              dpo:InsufficientExercise
+              dpo:HighSugarDiet
+            )
+        ] ;
+    rdfs:subClassOf dpo:Measurement .
+
+fhir:Patient owl:disjointWith sio:Attribute .
+
+dpo:DiabetesHbA1CLevelPatient rdf:type owl:Class  ;
+    owl:equivalentClass [
+    rdf:type owl:Class ;
+      owl:intersectionOf (
+       fhir:Patient 
+        [ rdf:type owl:Restriction ;
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:DiabetesHbA1CLevel ] 
+     )
+    ] ;
+    rdfs:subClassOf fhir:Patient ;
+    rdfs:label "patient with diabetes HbA1C level" .
+
+dpo-kb:diabetesHbA1CLevel rdf:type dpo:DiabetesHbA1CLevel .
+
+dpo:MedicationNotEffective rdf:type owl:Class ;
+    rdfs:label "Medication Not Effective" .
+
+dpo:MedicationNotEffectivePatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:MedicationNotEffective
+            ] 
+        )
+    ];
+    rdfs:label "patient whose medication is not effective" .
+
+dpo-kb:medicationNotEffective rdf:type dpo:MedicationNotEffective .
+
+dpo:NotComplyingWithTherapy rdf:type owl:Class ;
+    rdfs:label "Not Complying With Therapy" .
+
+dpo:NotComplyingWithTherapyPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:NotComplyingWithTherapy
+            ] 
+        )
+    ];
+    rdfs:label "patient not complying with therapy" .
+
+dpo-kb:notComplyingWithTherapy rdf:type dpo:NotComplyingWithTherapy .
+
+dpo:InsufficientExercise rdf:type owl:Class ;
+    rdfs:label "Insufficient Exercise" .
+
+dpo:InsufficientExercisePatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:InsufficientExercise
+            ] 
+        )
+    ];
+    rdfs:label "patient with insufficient exercise" .
+
+dpo-kb:insufficientExercise rdf:type dpo:InsufficientExercise .
+
+dpo:HighSugarDiet rdf:type owl:Class ;
+    rdfs:label "High Sugar Diet" .
+
+dpo:HighSugarDietPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            fhir:Patient 
+            [ rdf:type owl:Restriction ; 
+              owl:onProperty sio:hasAttribute ;
+              owl:someValuesFrom dpo:HighSugarDiet
+            ] 
+        )
+    ];
+    rdfs:label "patient with high sugar diet" .
+
+dpo-kb:highSugarDiet rdf:type dpo:HighSugarDiet .
+
