@@ -5,3 +5,7 @@ google_analytics:
 theme: jekyll-theme-cayman
 remote_theme: pages-themes/cayman@v0.2.0
 gem "github-pages", group: :jekyll_plugins
+
+github:
+  zip_url: http://example.com/download.zip
+  another_url: another value

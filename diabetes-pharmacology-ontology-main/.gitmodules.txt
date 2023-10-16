@@ -1,3 +1,0 @@
-[submodule "cayman"]
-    path = docs
-    url = https://github.com/suhyeong-jeon/suhyeong-jeon.github.io
